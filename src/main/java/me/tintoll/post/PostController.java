@@ -2,6 +2,7 @@ package me.tintoll.post;
 
 
 import lombok.RequiredArgsConstructor;
+import me.tintoll.category.Category;
 import me.tintoll.exception.NotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -50,10 +51,13 @@ public class PostController {
         if(bindingResult.hasErrors()) {
             return "post/new";
         }
+        // post도 comment와 마찬가지로 생성시에 연관관계의 category를 넣어 줬다.
+        // 연관관계의 주인만이 읽기, 쓰기가 모두 가능하다. 주인이 아닌 곳에서는 읽기만 가능하다.
         Post post = new Post(createPost.getTitle(),
                              createPost.getContent(),
                              createPost.getCode(),
-                             PostStatus.Y);
+                             PostStatus.Y,
+                             new Category(createPost.getCategoryId()));
         Post newPost = postService.createPost(post);
         model.addAttribute("post",newPost);
         return "redirect:/posts/"+newPost.getId();
@@ -65,11 +69,12 @@ public class PostController {
         if(bindingResult.hasErrors()) {
             return "post/edit";
         }
-
+        // post도 comment와 마찬가지로 생성시에 연관관계의 category를 넣어 줬다.
         postService.updatePost(id, new Post(createPost.getTitle(),
                 createPost.getContent(),
                 createPost.getCode(),
-                PostStatus.Y));
+                PostStatus.Y,
+                new Category(createPost.getCategoryId())));
 
         return "redirect:/posts/"+id;
     }
