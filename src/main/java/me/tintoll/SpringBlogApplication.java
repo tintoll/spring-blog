@@ -3,9 +3,11 @@ package me.tintoll;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.thymeleaf.dialect.springdata.SpringDataDialect;
 
 
 /*
@@ -20,6 +22,11 @@ public class SpringBlogApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(SpringBlogApplication.class, args);
+	}
+
+	@Bean
+	public SpringDataDialect springDataDialect() {
+		return new SpringDataDialect();
 	}
 
 }
