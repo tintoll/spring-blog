@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.thymeleaf.org/spring-data"
       layout:decorator="layouts/main" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
-
+<!--
+Thymeleaf Layout Dialect 이라는 기능있다. 공통된 부분은 따로 빼고 해당 body만 교체해주는 그런 기능이다.
+-->
 <head>
 
     <meta charset="utf-8" />
@@ -25,7 +27,21 @@
                         </h2>
                     </a>
                     <p class="post-meta">Posted by <a href="#">tintoll</a>
+
+                        <!--
+                            thymeleaf서드파트 라이브러리중에 java8 datetime을 지원해주는 것을 사용함
+                        -->
                         <strong th:text="${#temporals.format(post.regDate,'yyyy-MM-dd')}"></strong>
+
+                        <!--
+                            저번에도 잠깐 언급했었지만 fetch = FetchType.LAZY 일 경우에는 지연로딩을 한다고 했다. 지연로딩은 해당 프로퍼티가 사용될 때 실제 쿼리를 날린다.
+                            하지만 조건이 있는데 트랜잭션 안에서만 그게 가능하다. 트랜잭션 안에서는 마음껏 사용해도 되지만 트랜잭션 밖에서 사용하면 에러가 발생한다.
+                            처음 jpa를 사용하면 자주 나오는 exception인 lazyinitializationexception이다.
+                            이방법을 해결하기 위한것은 opensessioninview 이하 osiv 이라는 것인데 이거 또한 설명할 양이 꽤 된다.
+                            간단하게 설명하자면 view까지 영속성을 확장 한다는 의미이다. 하지만 여기서 중요한것은 확장을 한다고 해도 트랜잭션안에서만 변경이 가능하다.
+                            우리는 아무 설정도 하지 않았는데 lazyinitializationexception이 나오지 않았다.
+                            그것은 기본적으로 Spring boot는 opensessioninview를 사용하고 있다. 그래서 에러가 나오지 않았던 것이다.
+                        -->
                         <strong th:text="${post.category.name}"></strong> </p>
                 </div>
             </div>
