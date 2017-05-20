@@ -5,13 +5,14 @@ import lombok.Data;
 import me.tintoll.post.Post;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
-public class Category {
+public class Category implements Serializable {
 
     @Id @GeneratedValue
     private Long id;

@@ -2,12 +2,18 @@ package me.tintoll;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+
 import org.thymeleaf.dialect.springdata.SpringDataDialect;
+
+import javax.cache.configuration.MutableConfiguration;
+import javax.cache.expiry.CreatedExpiryPolicy;
+import javax.cache.expiry.Duration;
+import java.util.concurrent.TimeUnit;
 
 
 /*
@@ -18,6 +24,7 @@ import org.thymeleaf.dialect.springdata.SpringDataDialect;
  */
 @SpringBootApplication
 @EntityScan(basePackageClasses = {SpringBlogApplication.class, Jsr310JpaConverters.class})
+@EnableCaching
 public class SpringBlogApplication {
 
 	public static void main(String[] args) {
@@ -29,4 +36,25 @@ public class SpringBlogApplication {
 		return new SpringDataDialect();
 	}
 
+
+
+	/*
+		캐시 설정
+		blog.category라는 키에 1분동안 캐시를 한다고 지정해줬다.
+		Duration 에는 ONE_DAY, ONE_HOUR, THIRTY_MINUTES, TEN_MINUTES 기타 등등
+		여러가지의 시간이 있기는 하지만 거기에 없는 시간이 있다면 만들면 된다.
+
+		설정 속성중에 statisticsEnabled 모니터링을 할 수 있는 속성이다. 해당 캐시의 통계를 확인 할 수 있다. jconsole로 확인 가능하다.
+	 */
+	public static final Duration TEN_SECONDS = new Duration(TimeUnit.SECONDS, 10);
+
+	@Bean
+	public JCacheManagerCustomizer cacheManagerCustomizer() {
+		return cm -> cm.createCache("blog.category", initConfiguration(TEN_SECONDS));
+	}
+
+	private MutableConfiguration<Object, Object> initConfiguration(Duration duration) {
+		return new MutableConfiguration<>().setStatisticsEnabled(true)
+				.setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(duration));
+	}
 }
