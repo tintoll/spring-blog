@@ -3,6 +3,7 @@ package me.tintoll.comment;
 
 import lombok.RequiredArgsConstructor;
 import me.tintoll.post.Post;
+import me.tintoll.post.PostRepository;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +17,13 @@ import javax.validation.Valid;
 public class CommentController {
 
     private final CommentService commentService;
+
+    private final PostRepository postRepository;
+
+    @ModelAttribute
+    public Post post(@ModelAttribute CommentDto commentDto){
+        return postRepository.findOne(commentDto.getPostId());
+    }
 
     @PostMapping
     public String createComment(@ModelAttribute @Valid CommentDto commentDto,

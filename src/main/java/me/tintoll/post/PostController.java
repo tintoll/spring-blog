@@ -4,6 +4,9 @@ package me.tintoll.post;
 import lombok.RequiredArgsConstructor;
 import me.tintoll.category.Category;
 import me.tintoll.category.CategoryService;
+import me.tintoll.comment.CommentDto;
+import me.tintoll.config.Navigation;
+import me.tintoll.config.Section;
 import me.tintoll.exception.NotFoundException;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -13,9 +16,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/posts")
+@Navigation(Section.POST)
 public class PostController {
 
     private final PostService postService;
@@ -27,7 +32,7 @@ public class PostController {
     }
 
     @GetMapping("/{id}")
-    public String findByPost(@PathVariable Long id, Model model) {
+    public String findByPost(@PathVariable Long id, Model model, @ModelAttribute CommentDto commentDto) {
         Post post = postService.findByIdAndStatus(id, PostStatus.Y);
         if(post == null) throw new NotFoundException(id + " not found");
         model.addAttribute("post", post);

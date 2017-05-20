@@ -2,6 +2,8 @@ package me.tintoll.category;
 
 
 import lombok.RequiredArgsConstructor;
+import me.tintoll.config.Navigation;
+import me.tintoll.config.Section;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +16,7 @@ import javax.validation.Valid;
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/categories")
+@Navigation(Section.CATEGORY)
 public class CategoryController {
 
     private final CategoryService categoryService;
