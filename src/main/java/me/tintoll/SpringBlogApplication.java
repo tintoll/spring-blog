@@ -8,6 +8,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.jpa.convert.threeten.Jsr310JpaConverters;
 
+import org.springframework.web.client.RestTemplate;
 import org.thymeleaf.dialect.springdata.SpringDataDialect;
 
 import javax.cache.configuration.MutableConfiguration;
@@ -50,11 +51,19 @@ public class SpringBlogApplication {
 
 	@Bean
 	public JCacheManagerCustomizer cacheManagerCustomizer() {
-		return cm -> cm.createCache("blog.category", initConfiguration(TEN_SECONDS));
+		return cm -> {
+			cm.createCache("blog.category", initConfiguration(TEN_SECONDS));
+			cm.createCache("github.user", initConfiguration(Duration.ONE_HOUR));
+		};
 	}
 
 	private MutableConfiguration<Object, Object> initConfiguration(Duration duration) {
 		return new MutableConfiguration<>().setStatisticsEnabled(true)
 				.setExpiryPolicyFactory(CreatedExpiryPolicy.factoryOf(duration));
+	}
+
+	@Bean
+	public RestTemplate restTemplate() {
+		return new RestTemplate();
 	}
 }

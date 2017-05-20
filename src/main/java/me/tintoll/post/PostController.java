@@ -8,6 +8,8 @@ import me.tintoll.comment.CommentDto;
 import me.tintoll.config.Navigation;
 import me.tintoll.config.Section;
 import me.tintoll.exception.NotFoundException;
+import me.tintoll.user.User;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -60,7 +62,8 @@ public class PostController {
     }
 
     @PostMapping
-    public String createPost(@ModelAttribute @Valid PostDto createPost, BindingResult bindingResult, Model model) {
+    public String createPost(@ModelAttribute @Valid PostDto createPost, BindingResult bindingResult, Model model
+                            ,@AuthenticationPrincipal User user) {
         if(bindingResult.hasErrors()) {
             return "post/new";
         }
@@ -78,7 +81,8 @@ public class PostController {
 
     @PutMapping("/{id}/edit")
     public String modifyPost(@PathVariable Long id, @ModelAttribute("editPost") @Valid PostDto createPost,
-                             BindingResult bindingResult) {
+                             BindingResult bindingResult,
+                             @AuthenticationPrincipal User user) {
         if(bindingResult.hasErrors()) {
             return "post/edit";
         }
@@ -92,10 +96,10 @@ public class PostController {
         return "redirect:/posts/"+id;
     }
 
-    @DeleteMapping("/{id}/delete")
+    @PostMapping("/{id}/delete")
     public String deletePost(@PathVariable Long id) {
         postService.deletePost(id);
-        return "redirect:/#/";
+        return "redirect:/";
     }
 
 }

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -40,16 +41,19 @@
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="/index.html">Home</a>
+                    <a href="/">Home</a>
+                </li>
+                <li sec:authorize="hasRole('ROLE_ADMIN')">
+                    <a href="/categories">category</a>
                 </li>
                 <li>
-                    <a href="/about.html">About</a>
+                    <a sec:authorize="!hasRole('ROLE_USER')" th:href="@{/login}"
+                       role="button">Login</a>
                 </li>
-                <li>
-                    <a href="/post.html">Sample Post</a>
-                </li>
-                <li>
-                    <a href="/contact.html">Contact</a>
+                <li sec:authorize="hasRole('ROLE_USER')">
+                    <form th:action="@{/logout}" method="post" role="logout">
+                        <button type="submit" class="btn" style=" padding:18px; color: #fff; background-color: rgba( 255, 255, 255, 0.0 );">Sign Out</button>
+                    </form>
                 </li>
             </ul>
         </div>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sd="http://www.thymeleaf.org/spring-data"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       layout:decorator="layouts/main" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
 <!--
 Thymeleaf Layout Dialect 이라는 기능있다. 공통된 부분은 따로 빼고 해당 body만 교체해주는 그런 기능이다.
@@ -20,6 +21,11 @@ Thymeleaf Layout Dialect 이라는 기능있다. 공통된 부분은 따로 빼�
     <!-- Main Content -->
     <div class="container" layout:fragment="content">
         <div class="row">
+            <ul class="pager" sec:authorize="hasRole('ROLE_ADMIN')">
+                <li class="next">
+                    <a th:href="@{/posts/new}">write</a>
+                </li>
+            </ul>
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-preview" th:each="post : ${posts.content}">
                     <a th:href="@{'/posts/'+${post.id}}">

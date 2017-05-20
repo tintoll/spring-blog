@@ -19,7 +19,7 @@
 </head>
 <body>
 <form class="form-horizontal well bs-component col-lg-10 col-lg-offset-1" th:action="@{'/posts/'+${editPost.id} +'/edit/'}"
-      th:object="${editPost}" method="post" th:id="post">
+      th:object="${editPost}" th:method="put" th:id="post">
     <fieldset>
         <div class="form-group" th:classappend="(${#fields.hasErrors('title')}? ' has-error')">
             <label for="title" class="col-lg-2 control-label">Title</label>
@@ -70,6 +70,7 @@
 
     function deletePost(postId){
         document.getElementById("post").action = "/posts/"+postId +"/delete";
+        //document.getElementById("post").innerHTML = '<input type="hidden" name="_method" value="delete" />';
         document.getElementById("post").submit();
     }
     /*]]>*/

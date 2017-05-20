@@ -4,6 +4,7 @@ package me.tintoll.post;
 import lombok.Data;
 import me.tintoll.category.Category;
 import me.tintoll.comment.Comment;
+import me.tintoll.user.User;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -44,6 +45,11 @@ public class Post {
 
     @OneToMany(mappedBy = "post" , fetch = FetchType.LAZY)
     private List<Comment> comments;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    private User user;
 
     Post(){
     }
